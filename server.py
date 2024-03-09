@@ -35,7 +35,9 @@ def receive():
         client_socket, address = server.accept()
         print(f"Connected with {str(address)}")
 
-        ssl_client_socket = ssl.wrap_socket(client_socket, server_side=True, certfile="server.pem", keyfile="server.key")
+        ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        ssl_context.load_cert_chain(certfile="server.pem", keyfile="server.key")
+        ssl_client_socket = ssl_context.wrap_socket(client_socket, server_side=True)
         
         ssl_client_socket.send('NICK'.encode('ascii'))
         nickname = ssl_client_socket.recv(1024).decode('ascii')
