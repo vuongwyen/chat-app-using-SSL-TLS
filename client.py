@@ -2,10 +2,13 @@ import threading
 import socket
 import ssl
 
+# Request nickname
 nickname = input("Choose your nickname: ")
 
+# Create connect from client to server
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+# SSL/TLS used to protect connect
 ssl_context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
 ssl_context.check_hostname = False
 ssl_context.verify_mode = ssl.CERT_NONE
@@ -13,6 +16,8 @@ ssl_client = ssl_context.wrap_socket(client, server_hostname='127.0.0.1')
 
 ssl_client.connect(('127.0.0.1', 55555))
 
+# Receive_thread using for receive message from server 
+# and print to client's screen
 def receive():
     while True:
         try:
@@ -26,6 +31,7 @@ def receive():
             ssl_client.close()
             break
 
+# Receive mesage from client & send them to server
 def write():
     while True:
         message = f'{nickname}: {input()}'
